@@ -6,7 +6,7 @@
 		</div>
 		<div class="text-right">
 			<p> <?=$first_name;?> <?=$last_name;?> </p>
-			<p> <?=$location['name'];?> </p>
+			<p> <?=$location;?> </p>
 		</div>
 
 		<div class="clearfix"></div>
@@ -35,13 +35,25 @@
 	</div>
 
 	<div id="user-bucket" class="span8">
-		<div>
-			<?php print_r($friends); ?>
-		</div>
+
 	</div>
 
-	<div id="user-buckets" class="span2">
-		<p>test</p>
+	<div id="list-buckets" class="span2">
+		<h1>
+			<i class="icon-th-large" style="font-size:37px;"></i>
+		 	Buckets
+		</h1>
+
+		<hr/>
+
+		<?php if($buckets): ?>
+			<?php foreach ($buckets as $bucket): ?>
+				<h2> <a href="#"><?=$bucket['name'];?></a> </h2>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<h2> <a href="#new"> Create Bucket </a> </h2>
+		<?php endif; ?>
+
 	</div>
 	
 </div>

@@ -157,7 +157,7 @@ section {
 }*/
 
 #form-friends {
-	background-color:rgba(58, 133, 148, 0.5);
+	background-color: rgba(58, 133, 148, 0.5);
 	-webkit-border-top-left-radius: 5px;
 	-webkit-border-top-right-radius: 5px;
 	-moz-border-radius-topleft: 5px;
@@ -190,7 +190,7 @@ section {
 #friends-list {
 	padding: 12px;
 	margin: 0;
-	max-height: 600px;
+	max-height: 550px;
 	overflow: auto;
 }
 
@@ -199,6 +199,25 @@ section {
 	float: left;
 	width: 100%;
 	margin-bottom: 10px;
+}
+
+#user-bucket {
+	background: #fefefe;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	box-shadow: 0 6px 6px -6px #3A8594;
+	padding: 20px;
+}
+
+#list-buckets {
+	text-align: right;
+	/*border-left: 1px solid rgba(58, 133, 148, 0.5);*/
+}
+
+#list-buckets h1 {
+	margin: 0;
+	text-align: center;
 }
 
 /* Responsive

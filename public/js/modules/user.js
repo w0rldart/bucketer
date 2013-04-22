@@ -8,4 +8,11 @@ $(document).ready(function($) {
 			return !re.test($(this).text());
 		}).hide();
 	});
+
+	var header_height = $('.navbar').height();
+	var container_height = $('#master').css('marginTop').replace('px', '')*2;
+
+	//$('#friends-list').css({'max-height': $(window).height() - header_height - container_height - $('.form-friends > .form-horizontal').height()});
+	$('#user-bucket').height($(window).height() - header_height - container_height - 40);
+	$('#list-buckets').height($(window).height() - header_height - container_height);
 });

@@ -14,4 +14,11 @@ class Base_Controller extends Controller {
 		return Response::error('404');
 	}
 
+	public function __construct()
+	{
+		parent::__construct();
+
+		Asset::add('font-awesome', 'css/font-awesome.min.css');
+	}
+
 }

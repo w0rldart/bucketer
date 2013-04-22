@@ -39,28 +39,53 @@ class User_Controller extends Base_Controller {
 					'friends' => $user_friends['data'],
 				);*/
 
-				$new_user = new User;
+				if( ! $user = User::where('fb_id', '=', $user_profile['id'])->first())
+				{
+					$new_user = new User;
 
-				$new_user->fb_id = $user_profile['id'];
-				$new_user->first_name = $user_profile['first_name'];
-				$new_user->last_name = $user_profile['last_name'];
-				$new_user->username = $user_profile['username'];
-				$new_user->location = $user_profile['location'];
-				$new_user->friends = serialize($user_friends['data']);
+					$new_user->fb_id = $user_profile['id'];
+					$new_user->first_name = $user_profile['first_name'];
+					$new_user->last_name = $user_profile['last_name'];
+					$new_user->username = $user_profile['username'];
+					$new_user->location = $user_profile['location']['name'];
+					$new_user->friends = serialize($user_friends['data']);
 
-				//$new_user->save();
+					$new_user->save();
+
+					$user_id = $new_user->attributes['id'];	
+				}
+				else
+				{
+					$user_id = $user->attributes['id'];
+				}
 
 			} catch (FacebookApiException $e) {
 			    error_log($e);
 			}
 
+			$buckets_raw = Bucket::where('user_id', '=', $user_id)->get();
+			if($buckets_raw)
+			{
+				$buckets = array();
+				foreach ($buckets_raw as $bucket)
+				{
+					$buckets[] = $bucket->attributes;
+				}
+			}
+			else
+			{
+				$buckets = null;
+			}
+
 			$view = View::make('modules.user.index', array(
+				'uid' => $user_id,
 				'fb_id' => $user_profile['id'],
 				'first_name' => $user_profile['first_name'],
 				'last_name' => $user_profile['last_name'],
 				'username' => $user_profile['username'],
-				'location' => $user_profile['location'],
+				'location' => $user_profile['location']['name'],
 				'friends' => $user_friends['data'],
+				'buckets' => $buckets,
 			));
 			$this->layout->content = $view;
 		}
@@ -70,7 +95,9 @@ class User_Controller extends Base_Controller {
 	{
 		if($this->user)
 		{
-			return Redirect::to($this->facebook->getLogoutUrl());
+			return Redirect::to($this->facebook->getLogoutUrl(array(
+        		'next' => URL::home(),
+    		)));
 		}
 
 	}
