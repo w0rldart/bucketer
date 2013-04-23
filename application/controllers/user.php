@@ -15,6 +15,8 @@ class User_Controller extends Base_Controller {
 
 		$this->facebook = IoC::resolve('facebook-sdk');
 		$this->user = $this->facebook->getUser();
+
+		$this->user_profile = $this->facebook->api('/me');
 	}
 
 	public function get_index()
@@ -27,27 +29,15 @@ class User_Controller extends Base_Controller {
 		{
 			try {
 
-				$user_profile = $this->facebook->api('/me');
-				$user_friends = $this->facebook->api('/me/friends');
-
-				/*$user_data = array(
-					'fb_id' => $user_profile['id'],
-					'first_name' => $user_profile['first_name'],
-					'last_name' => $user_profile['last_name'],
-					'username' => $user_profile['username'],
-					'location' => $user_profile['location'],
-					'friends' => $user_friends['data'],
-				);*/
-
-				if( ! $user = User::where('fb_id', '=', $user_profile['id'])->first())
+				if( ! $user = User::where('fb_id', '=', $this->user_profile['id'])->first())
 				{
 					$new_user = new User;
 
-					$new_user->fb_id = $user_profile['id'];
-					$new_user->first_name = $user_profile['first_name'];
-					$new_user->last_name = $user_profile['last_name'];
-					$new_user->username = $user_profile['username'];
-					$new_user->location = $user_profile['location']['name'];
+					$new_user->fb_id = $this->user_profile['id'];
+					$new_user->first_name = $this->user_profile['first_name'];
+					$new_user->last_name = $this->user_profile['last_name'];
+					$new_user->username = $this->user_profile['username'];
+					$new_user->location = $this->user_profile['location']['name'];
 					$new_user->friends = serialize($user_friends['data']);
 
 					$new_user->save();
@@ -63,29 +53,13 @@ class User_Controller extends Base_Controller {
 			    error_log($e);
 			}
 
-			$buckets_raw = Bucket::where('user_id', '=', $user_id)->get();
-			if($buckets_raw)
-			{
-				$buckets = array();
-				foreach ($buckets_raw as $bucket)
-				{
-					$buckets[] = $bucket->attributes;
-				}
-			}
-			else
-			{
-				$buckets = null;
-			}
-
 			$view = View::make('modules.user.index', array(
 				'uid' => $user_id,
-				'fb_id' => $user_profile['id'],
-				'first_name' => $user_profile['first_name'],
-				'last_name' => $user_profile['last_name'],
-				'username' => $user_profile['username'],
-				'location' => $user_profile['location']['name'],
-				'friends' => $user_friends['data'],
-				'buckets' => $buckets,
+				'fb_id' => $this->user_profile['id'],
+				'first_name' => $this->user_profile['first_name'],
+				'last_name' => $this->user_profile['last_name'],
+				'username' => $this->user_profile['username'],
+				'location' => $this->user_profile['location']['name'],
 			));
 			$this->layout->content = $view;
 		}
@@ -99,6 +73,12 @@ class User_Controller extends Base_Controller {
         		'next' => URL::home(),
     		)));
 		}
+	}
 
+	public function get_friends_list($data = array())
+	{
+		$user_friends = $this->facebook->api('/me/friends');
+
+		return Response::json($user_friends['data']);
 	}
 }

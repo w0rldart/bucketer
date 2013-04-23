@@ -8,20 +8,96 @@ class Bucket_Controller extends Base_Controller {
 	{
 		$this->layout = "layouts.default";
 		parent::__construct();
+
+		$this->facebook = IoC::resolve('facebook-sdk');
+		$this->user = $this->facebook->getUser();
 	}
 
-	public function get_index()
+	public function get_index($data = array())
 	{
-		return Redirect::to('/user', 301);
+		if($bucket_raw = Bucket::where_id($data['id'])->first(array('id', 'user_id', 'name', 'friends')))
+		{
+			$bucket = $bucket_raw->attributes;
+			$bucket['friends'] = unserialize($bucket['friends']);
+
+			return Response::json($bucket);
+		}
+		else
+		{
+			return Response::fail();
+		}
 	}
 
-	public function post_index()
+	public function get_list($data = array())
 	{
-		$input = Input::all();
+		$buckets_raw = Bucket::where('user_id', '=', $data['id'])->get();
+		if($buckets_raw)
+		{
+			$buckets = array();
+			foreach ($buckets_raw as $bucket)
+			{
+				$buckets[] = $bucket->attributes;
+			}
+		}
+		else
+		{
+			$buckets = null;
+		}
 
-		$new_bucket = new Bucket;
+		return Response::json($buckets);
+	}
 
-		$new_bucket->user_id = $input['fb_id'];
+	public function post_index($data = array())
+	{
+		$new_bucket = Bucket::create(array(
+			'user_id' => $data['input']['id'],
+			'name' => $data['input']['name'],
+			'friends' => null,
+		));
+
+		if($new_bucket)
+		{
+			$result = $this->get_list($data);
+		}
+		else
+		{
+			$result = false;
+		}
+
+		return Response::json($result);
+	}
+
+	public function put_index($data = array())
+	{
+		if( ($bucket = Bucket::find($data['input']['bucket'])->first()) && ( ! is_null($bucket->attributes['friends'])) )
+		{
+			$friends = unserialize($bucket->attributes['friends']);
+			$friends[] = array(
+				'fb_id' => $data['input']['friend_id'],
+				'name' => $data['input']['friend_name'],
+			);
+		}
+		else
+		{
+			$friends = array(
+				array(
+					'fb_id' => $data['input']['friend_id'],
+					'name' => $data['input']['friend_name'],
+				),
+			);
+		}
+
+		$bucket->friends = serialize($friends);
+
+		if($bucket->save())
+		{
+			return Response::ok();
+		}
+		else
+		{
+			return Response::fail();
+		}
+
 	}
 
 }

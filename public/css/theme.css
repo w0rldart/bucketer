@@ -157,13 +157,6 @@ section {
 }*/
 
 #form-friends {
-	background-color: rgba(58, 133, 148, 0.5);
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
 }
 
 #form-friends > form {
@@ -188,18 +181,20 @@ section {
 }
 
 #friends-list {
+	float: left;
+	background-color: rgba(58, 133, 148, 0.5);
 	padding: 12px;
 	margin: 0;
 	max-height: 550px;
 	overflow: auto;
 }
 
-#friends-list li{
-	list-style: none;
-	float: left;
-	width: 100%;
-	margin-bottom: 10px;
-}
+	#friends-list li{
+		list-style: none;
+		float: left;
+		width: 100%;
+		margin-bottom: 10px;
+	}
 
 #user-bucket {
 	background: #fefefe;
@@ -210,6 +205,22 @@ section {
 	padding: 20px;
 }
 
+	#bucket-friends li{
+		list-style: none;
+		float: left;
+		display: inline-table;
+	}
+
+	.bucket-item{
+		width: 100px;
+		background: #B6E0E7;
+		padding: 0.4em; margin: 0 0.4em 0.4em 0;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		box-shadow: 0 6px 6px -6px #3A8594;
+	}
+
 #list-buckets {
 	text-align: right;
 	/*border-left: 1px solid rgba(58, 133, 148, 0.5);*/
@@ -218,6 +229,37 @@ section {
 #list-buckets h1 {
 	margin: 0;
 	text-align: center;
+}
+
+#list-buckets #create-bucket {
+}
+
+#list-buckets h2 {
+	text-shadow: 1px 1px 0px #3A8594;
+	border-bottom: 1px dashed #3A8594;
+	padding-bottom: 15px;
+}
+
+#list-buckets h2 a{
+	color: white;
+}
+
+#list-buckets h2 i {
+	font-size: 28px;
+	margin-left: 5%;
+}
+
+#list-buckets #create-bucket i {
+	margin-left: 5%;
+	float: right;
+	line-height: 45px;
+	display: block;
+	width: 30px;
+	text-align: center;
+}
+
+.modal-body form {
+	margin: 0;
 }
 
 /* Responsive

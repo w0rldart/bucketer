@@ -47,7 +47,7 @@
                 <div>
                     <h2> USE </h2>
                     <p> Use those buckets to organize your friends, to notify them, and much more. </p>
-                    <p> <a href="#" class="btn btn-primary" style="font-style: normal;"> Login with Facebook </a> </p>
+                    <p> <a href="/user" class="btn btn-primary" style="font-style: normal;"> Login with Facebook </a> </p>
                 </div>
             </div>
         </article>

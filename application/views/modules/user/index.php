@@ -1,7 +1,7 @@
 <section id="user-index" class="row-fluid">
 
 	<div id="user-sidebar" class="span2">
-		<div class="img-circle pull-left">
+		<div class="pull-left">
 			<?=Image::rounded("https://graph.facebook.com/$username/picture?type=normal");?>
 		</div>
 		<div class="text-right">
@@ -19,16 +19,6 @@
 			<?=Form::close();?>
 
 			<ul id="friends-list">
-			<?php foreach ($friends as $friend): ?>
-				<li>
-					<div class="img-circle pull-left">
-						<?=Image::rounded("https://graph.facebook.com/{$friend['id']}/picture?type=small");?>
-					</div>
-					<div class="text-right">
-						<p> <?=$friend['name'];?> </p>
-					</div>
-				</li>
-			<?php endforeach; ?>
 			</ul>
 
 		</div>
@@ -46,14 +36,29 @@
 
 		<hr/>
 
-		<?php if($buckets): ?>
-			<?php foreach ($buckets as $bucket): ?>
-				<h2> <a href="#"><?=$bucket['name'];?></a> </h2>
-			<?php endforeach; ?>
-		<?php else: ?>
-			<h2> <a href="#new"> Create Bucket </a> </h2>
-		<?php endif; ?>
-
+		<h2 id="create-bucket">
+			<a href="#bucket-form" role="button" data-toggle="modal"> Create Bucket <i class="icon-plus"></i> </a>
+		</h2>
 	</div>
 	
 </div>
+
+<div id="bucket-form" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Enter your new bucket's name</h3>
+	</div>
+	<div class="modal-body">
+		<?=Form::horizontal_open();?>
+		<?=Form::text('bucket-name', null, array('class'=>'input-block-level', 'placeholder'=>'Co-Workers'));?>
+		<?=Form::close();?>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true" id="close-form-button">Close</button>
+		<button class="btn btn-primary" id="create-bucket-button">Create</button>
+	</div>
+</div>
+
+<script>
+	var uid = <?=$uid;?>;
+</script>
