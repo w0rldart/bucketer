@@ -26,17 +26,18 @@ class User_Controller extends Base_Controller {
 		else
 		{
 			try {
-				$this->user_profile = $this->facebook->api('/me');
+				$user_profile = $this->facebook->api('/me');
+				$user_friends = $this->facebook->api('/me/friends');
 
-				if( ! $user = User::where('fb_id', '=', $this->user_profile['id'])->first())
+				if( ! $user = User::where('fb_id', '=', $user_profile['id'])->first())
 				{
 					$new_user = new User;
 
-					$new_user->fb_id = $this->user_profile['id'];
-					$new_user->first_name = $this->user_profile['first_name'];
-					$new_user->last_name = $this->user_profile['last_name'];
-					$new_user->username = $this->user_profile['username'];
-					$new_user->location = $this->user_profile['location']['name'];
+					$new_user->fb_id = $user_profile['id'];
+					$new_user->first_name = $user_profile['first_name'];
+					$new_user->last_name = $user_profile['last_name'];
+					$new_user->username = $user_profile['username'];
+					$new_user->location = $user_profile['location']['name'];
 					$new_user->friends = serialize($user_friends['data']);
 
 					$new_user->save();
@@ -54,11 +55,11 @@ class User_Controller extends Base_Controller {
 
 			$view = View::make('modules.user.index', array(
 				'uid' => $user_id,
-				'fb_id' => $this->user_profile['id'],
-				'first_name' => $this->user_profile['first_name'],
-				'last_name' => $this->user_profile['last_name'],
-				'username' => $this->user_profile['username'],
-				'location' => $this->user_profile['location']['name'],
+				'fb_id' => $user_profile['id'],
+				'first_name' => $user_profile['first_name'],
+				'last_name' => $user_profile['last_name'],
+				'username' => $user_profile['username'],
+				'location' => $user_profile['location']['name'],
 			));
 			$this->layout->content = $view;
 		}
