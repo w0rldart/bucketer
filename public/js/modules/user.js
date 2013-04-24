@@ -1,6 +1,21 @@
+/*
+* TODO
+*	Function to remove items from the bucket
+*	Function to delete buckets
+*	Friends list refreshed on bucket change
+*	Friends list hidde friends on bucket open with friends
+*/
+
 var user = {
+
+	/*
+	* user.friends_list()
+	* function to retrieve the list and initialize the drag&drop
+	*/
 	friends_list : function() {
-		$.get('/ajax/user/friends_list', function(data) {
+
+		// Retrieve the actual friend list
+		$.get(base_url+'ajax/user/friends_list', function(data) {
 			$(data).each(function(i, v) {
 				$('#friends-list').append(
 					'<li data-fid="'+v['id']+'" data-name="'+v['name']+'">'+
@@ -12,7 +27,7 @@ var user = {
 				);
 			});
 
-		    // let the gallery items be draggable
+		    // let the friends-list items be draggable
 		    $('#friends-list li').draggable({
 				//cancel: 'a.ui-icon', // clicking an icon won't initiate dragging
 				revert: 'invalid', // when not dropped, the item will revert back to its initial position
@@ -31,10 +46,15 @@ var user = {
 				}
 		    });
 
-		    /*
-		    * TODO
-		    *	Add possibility to remove items from the bucket
-		    */
+		    // funtion to sort friends list
+			var $friends = $('#friends-list li');
+			$('#friend-search').keyup(function() {
+				var re = new RegExp($(this).val(), "i"); // "i" means it's case-insensitive
+				$friends.show().filter(function() {
+					return !re.test($(this).text());
+				}).hide();
+			});
+
 		    // let the gallery be droppable as well, accepting items from the trash
 			/*$gallery.droppable({
 				accept: "#bucket-friends li",
@@ -45,12 +65,22 @@ var user = {
 			});*/
 		});
 	},
-	buckets_list : function() {
-		$.get('/ajax/bucket/list/'+uid, function(data) {
-			$(data).each(function(i, v) {
-				$('#list-buckets').append('<h2 id="open-bucket"> <a href="#" data-id="'+v['id']+'"> '+v['name']+' <i class="icon-th"></i> </a> </h2>');
-			});
 
+	/*
+	* user.buckets_list()
+	* function to retrieve the bucket and open them
+	*/
+	buckets_list : function() {
+		$.get(base_url+'ajax/bucket/list/'+uid, function(data) {
+
+			// Create the array with the buckets, and insert it the DOM
+			var list = [];
+			$(data).each(function(i, v) {
+				list.push('<h2 id="open-bucket"> <a href="#" data-id="'+v['id']+'"> '+v['name']+' <i class="icon-th"></i> </a> </h2>');
+			});
+			$('#list-buckets').html(list);
+
+			// Bucket name clicked, open it
 			$('#open-bucket > a').click(function(e) {
 
 				e.preventDefault();
@@ -58,6 +88,7 @@ var user = {
 				var bucket_title = $(this).text();
 				var bucket_id = $(this).data('id');
 
+				// Insert the markup related to the bucket
 				$('#user-bucket').html(
 					'<div id="bucket-title" class="row-fluid">'+
 						'<h2 class="pull-left"> Bucket: '+bucket_title+'</h2>'+
@@ -66,7 +97,8 @@ var user = {
 					'<ul id="bucket-friends" class="row-fluid" data-id="'+bucket_id+'" style="height:90%; margin:0;"></ul>'
 				);
 
-				$.get('/ajax/bucket/index/'+bucket_id, function(data) {
+				// Retrieve bucket contents
+				$.get(base_url+'ajax/bucket/index/'+bucket_id, function(data) {
 					if(data)
 					{
 						$(data['friends']).each(function(i, v) {
@@ -78,17 +110,16 @@ var user = {
 									'<div class="text-center"> <p> '+v['name']+' </p> </div>'+
 								'</li>'
 							);
-							//$('#user-bucket').append('<h2 id="open-bucket"> <a href="#" data-bucket="'+v['id']+'"> '+v['name']+' <i class="icon-th"></i> </a> </h2>');
 						});
 					}
 
-					// let the trash be droppable, accepting the gallery items
+					// let the trash be droppable, accepting the friends-list items
 				    $('#bucket-friends').droppable({
 						accept: "#friends-list > li",
 						activeClass: "ui-state-highlight",
 						drop: function(event, ui) {
 							$.ajax({
-								url: '/ajax/bucket/index',
+								url: base_url+'ajax/bucket/index',
 								type: 'PUT',
 								data: { 'uid': uid, 'bucket': bucket_id, 'friend_id': ui.draggable.data('fid'), 'friend_name': ui.draggable.data('name') },
 								success: function(data) {
@@ -114,20 +145,12 @@ $(document).ready(function($) {
 	user.friends_list();
 	user.buckets_list();
 
-	var $products = $('#friends-list li');
-	$('#friend-search').keyup(function() {
-		var re = new RegExp($(this).val(), "i"); // "i" means it's case-insensitive
-		$products.show().filter(function() {
-			return !re.test($(this).text());
-		}).hide();
-	});
-
 	var header_height = $('.navbar').height();
 	var container_height = $('#master').css('marginTop').replace('px', '')*2;
 
 	//$('#friends-list').css({'max-height': $(window).height() - header_height - container_height - $('.form-friends > .form-horizontal').height()});
 	$('#user-bucket').height($(window).height() - header_height - container_height - 40);
-	$('#list-buckets').height($(window).height() - header_height - container_height);
+	//$('#menu-buckets').height($(window).height() - header_height - container_height);
 
     $('#create-bucket > a').click(function(e) {
     	e.preventDefault();
@@ -138,8 +161,8 @@ $(document).ready(function($) {
 	$('#create-bucket-button').click(function(e) {
 		e.preventDefault();
 
-		$.post('/ajax/bucket/index', {'id' : uid, 'name' : $('input[name="bucket-name"]').val()}, function(data) {
-			if(data !== null)
+		$.post(base_url+'ajax/bucket/index', {'id' : uid, 'name' : $('input[name="bucket-name"]').val()}, function(data) {
+			if(data)
 			{
 				user.buckets_list();
 				$('#close-form-button').click();

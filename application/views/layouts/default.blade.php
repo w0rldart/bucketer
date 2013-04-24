@@ -37,6 +37,11 @@
 
 		{{ Asset::container('bootstrapper')->scripts(); }}
 		{{ HTML::script('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js') }}
+
+		<script>
+			var base_url = '<?=URL::home();?>';
+		</script>
+
 		{{ HTML::script('js/main.js') }}
 		{{ Asset::scripts() }}
 

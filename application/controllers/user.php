@@ -15,8 +15,6 @@ class User_Controller extends Base_Controller {
 
 		$this->facebook = IoC::resolve('facebook-sdk');
 		$this->user = $this->facebook->getUser();
-
-		$this->user_profile = $this->facebook->api('/me');
 	}
 
 	public function get_index()
@@ -28,6 +26,7 @@ class User_Controller extends Base_Controller {
 		else
 		{
 			try {
+				$this->user_profile = $this->facebook->api('/me');
 
 				if( ! $user = User::where('fb_id', '=', $this->user_profile['id'])->first())
 				{

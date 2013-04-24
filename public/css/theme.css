@@ -221,35 +221,35 @@ section {
 		box-shadow: 0 6px 6px -6px #3A8594;
 	}
 
-#list-buckets {
+#menu-buckets {
 	text-align: right;
 	/*border-left: 1px solid rgba(58, 133, 148, 0.5);*/
 }
 
-#list-buckets h1 {
+#menu-buckets h1 {
 	margin: 0;
 	text-align: center;
 }
 
-#list-buckets #create-bucket {
+#menu-buckets #create-bucket {
 }
 
-#list-buckets h2 {
+#menu-buckets h2 {
 	text-shadow: 1px 1px 0px #3A8594;
 	border-bottom: 1px dashed #3A8594;
 	padding-bottom: 15px;
 }
 
-#list-buckets h2 a{
+#menu-buckets h2 a{
 	color: white;
 }
 
-#list-buckets h2 i {
+#menu-buckets h2 i {
 	font-size: 28px;
 	margin-left: 5%;
 }
 
-#list-buckets #create-bucket i {
+#menu-buckets #create-bucket i {
 	margin-left: 5%;
 	float: right;
 	line-height: 45px;

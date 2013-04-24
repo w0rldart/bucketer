@@ -28,7 +28,7 @@
 
 	</div>
 
-	<div id="list-buckets" class="span2">
+	<div id="menu-buckets" class="span2">
 		<h1>
 			<i class="icon-th-large" style="font-size:37px;"></i>
 		 	Buckets
@@ -39,6 +39,9 @@
 		<h2 id="create-bucket">
 			<a href="#bucket-form" role="button" data-toggle="modal"> Create Bucket <i class="icon-plus"></i> </a>
 		</h2>
+
+		<div id="list-buckets">
+		</div>
 	</div>
 	
 </div>

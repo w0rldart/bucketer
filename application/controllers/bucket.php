@@ -30,7 +30,7 @@ class Bucket_Controller extends Base_Controller {
 
 	public function get_list($data = array())
 	{
-		$buckets_raw = Bucket::where('user_id', '=', $data['id'])->get();
+		$buckets_raw = Bucket::where('user_id', '=', $data['id'])->get(array('id', 'user_id', 'name'));
 		if($buckets_raw)
 		{
 			$buckets = array();
@@ -57,19 +57,17 @@ class Bucket_Controller extends Base_Controller {
 
 		if($new_bucket)
 		{
-			$result = $this->get_list($data);
+			return Response::ok();
 		}
 		else
 		{
-			$result = false;
+			return Response::fail();
 		}
-
-		return Response::json($result);
 	}
 
 	public function put_index($data = array())
 	{
-		if( ($bucket = Bucket::find($data['input']['bucket'])->first()) && ( ! is_null($bucket->attributes['friends'])) )
+		if( ($bucket = Bucket::where_id($data['input']['bucket'])->first()) && ( ! is_null($bucket->attributes['friends'])) )
 		{
 			$friends = unserialize($bucket->attributes['friends']);
 			$friends[] = array(
