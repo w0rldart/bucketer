@@ -32,7 +32,9 @@
 |
 */
 
-Route::controller(Controller::detect());
+Route::controller('user');
+Route::controller('bucket');
+Route::controller('ajax');
 
 Route::get('/', function()
 {
